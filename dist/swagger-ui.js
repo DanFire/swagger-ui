@@ -32,7 +32,7 @@ $(function() {
 		var error_free = true;
 
 		// Cycle through the forms required inputs
- 		$(this).find("input.required").each(function() {
+ 		$(this).find("input.required:visible").each(function() {
 
 			// Remove any existing error styles from the input
 			$(this).removeClass('error');
@@ -1342,6 +1342,27 @@ helpers = helpers || Handlebars.helpers; data = data || {};
         tagName: 'tr',
         readOnly: this.model.isReadOnly
       });
+      
+    	// begin:conditional visibility
+		paramView.render();
+		if (param.conditions) {
+			var cond, field, _i;
+			for (_i = 0; _i < param.conditions.length; _i++) {
+				cond = param.conditions[_i];
+				field = $('select[name="' + cond.field + '"]', $(this.el));
+				field.change(function() {
+					if ($(this).val() == cond.value) {
+						$(paramView.el).show();
+					}
+					else {
+						$(paramView.el).hide();
+					}
+				});
+				field.change();
+			}
+		}
+    	// end:conditional visibility
+
       return $('.operation-params', $(this.el)).append(paramView.render().el);
     };
 
@@ -1362,7 +1383,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
       }
       form = $('.sandbox', $(this.el));
       error_free = true;
-      form.find("input.required").each(function() {
+      form.find("input.required:visible").each(function() {
         var _this = this;
         $(this).removeClass("error");
         if (jQuery.trim($(this).val()) === "") {
@@ -1380,7 +1401,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
         _ref = form.serializeArray();
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           o = _ref[_i];
-          if ((o.value != null) && jQuery.trim(o.value).length > 0) {
+          if ((o.value != null) && jQuery.trim(o.value).length > 0 && $(o).is(":visible")) {
             map[o.name] = o.value;
           }
         }
