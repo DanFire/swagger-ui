@@ -49,7 +49,26 @@ class OperationView extends Backbone.View
   addParameter: (param) ->
     # Render a parameter
     paramView = new ParameterView({model: param, tagName: 'tr', readOnly: @model.isReadOnly})
+    
+    paramView.render()
+
+    if @model.conditions
+      @addCondition condition for condition in @model.conditions
+      
     $('.operation-params', $(@el)).append paramView.render().el
+    
+  addCondition: (cond) ->
+    field = $('select[name="' + cond.field + '"]', $(this.el));
+    
+#	field.change(function() {
+#		if ($(this).val() == cond.value) {
+#			$(paramView.el).show();
+#		}
+#		else {
+#			$(paramView.el).hide();
+#		}
+#	});
+#	field.change();
 
   addStatusCode: (statusCode) ->
     # Render status codes
@@ -61,7 +80,7 @@ class OperationView extends Backbone.View
     # Check for errors
     form = $('.sandbox', $(@el))
     error_free = true
-    form.find("input.required").each ->
+    form.find("input.required:required").each ->
       $(@).removeClass "error"
       if jQuery.trim($(@).val()) is ""
         $(@).addClass "error"

@@ -32,7 +32,7 @@ $(function() {
 		var error_free = true;
 
 		// Cycle through the forms required inputs
- 		$(this).find("input.required").each(function() {
+ 		$(this).find("input.required:visible").each(function() {
 
 			// Remove any existing error styles from the input
 			$(this).removeClass('error');
